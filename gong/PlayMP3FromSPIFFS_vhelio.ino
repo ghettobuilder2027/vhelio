@@ -14,9 +14,9 @@
 
 
 AudioGeneratorMP3 *mp3;
-AudioFileSourceSPIFFS *duck,*coincoin;
+AudioFileSourceSPIFFS *file;
 AudioOutputI2S *out;
-AudioFileSourceID3 *id_duck,*id_coincoin;
+AudioFileSourceID3 *id;
 
 const int gongPin = 12;
 Button2 gongBtn = Button2(gongPin);
