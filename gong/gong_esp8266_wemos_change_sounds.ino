@@ -17,21 +17,34 @@ AudioOutputI2S *out;
 AudioFileSourceID3 *id;
 
 
-char *sons[] {
+char* sons[]= {
   "/2poire2.mp3",
   "/coincoin.mp3",
   "/duck.mp3",
-  "/gong_coin_gong_vraiment_grave.mp3",
+  "/gong_grave.mp3",
   "/gong.mp3",
   "/grenouille.mp3",
-  "/mp3.txt",
   "/paquebot.mp3",
   "/train1.mp3",
-  "/voiture.mp3"
+  "/voiture.mp3",
+  "/ruecapclaude.mp3",
+  "/ruecapclaude2.mp3",
+  "/ruecapclaude5.mp3"
 };
-int nb_sons = 10;
-char *son ;
 
+const int nombreSons = sizeof(sons) / sizeof(sons[0]);
+
+int indexSon = 0;
+
+void changeSon() {
+  indexSon = indexSon + 1;
+  if(indexSon == nombreSons)
+    indexSon = 0;
+}
+
+char* sonActuel() {
+  return sons[indexSon];
+}
 const int gongPin = D5;
 Button2 gongBtn = Button2(gongPin);
 const int changePin = D7;
@@ -47,11 +60,13 @@ void press(Button2& btn) {
   if (btn == gongBtn) {
     if (mp3->isRunning()) mp3->stop(); 
     Serial.println (" gong pushed");
-    playSound("/gong.mp3");
+    Serial.print("playing sound : ");
+   
+    playSound(sonActuel());
   }
   if (btn == changeBtn) {
     Serial.println (" change pushed");
-    
+   changeSon();
   }
   
 }
@@ -64,15 +79,13 @@ void setup()
   gongBtn.setPressedHandler(press);
   changeBtn.setPressedHandler(press);
 
-  *son = sons[0];
-  Serial.println(son);
-
+ 
   audioLogger = &Serial;
   out = new AudioOutputI2S(0,1,32,0);
   out->SetPinout(D8,D4,3);
-  out->SetGain(3.99);
+  out->SetGain(0.9);
   out->SetRate(22050);
-  file = new AudioFileSourceSPIFFS("/coincoin.mp3");
+  file = new AudioFileSourceSPIFFS(sonActuel());
   mp3 = new AudioGeneratorMP3();
   mp3->begin(file, out);
   
@@ -84,5 +97,5 @@ void loop()
     if (!mp3->loop()) mp3->stop();
   } 
   gongBtn.loop();
-  coincoinBtn.loop();
+  changeBtn.loop();
 }
