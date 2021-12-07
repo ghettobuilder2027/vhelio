@@ -52,6 +52,7 @@ Button2 changeBtn = Button2(changePin);
 
 void playSound(char *sound) {
   file->open(sound);
+  out->SetGain(3.9);
   id = new AudioFileSourceID3(file);
   mp3->begin(id, out);
 }
